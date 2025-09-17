@@ -11,13 +11,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh; /* 画面の高さに満たない場合でも中央寄せを維持 */
             margin: 0;
             background-color: #f4f4f4;
+            padding: 10px; /* 画面端の余白 */
+            box-sizing: border-box; /* paddingをwidth/heightに含める */
         }
         .chart-container {
             position: relative;
-            width: 90vw;
+            width: 100%; /* bodyのpaddingに合わせて100%に */
             max-width: 900px;
             padding: 20px;
             background-color: #fff;
@@ -27,6 +29,8 @@
         .tabs {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap; /* 画面幅に応じてタブを折り返す */
+            gap: 5px; /* 折り返した際のボタン間の隙間 */
             margin-bottom: 20px;
         }
         .tabs button {
@@ -37,11 +41,32 @@
             background-color: #eee;
             border-bottom: 2px solid transparent;
             transition: all 0.3s ease;
+            border-radius: 5px; /* 角を少し丸める */
         }
         .tabs button.active {
             background-color: #fff;
             border-bottom: 2px solid #007bff;
             color: #007bff;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 600px) {
+            body {
+                align-items: flex-start; /* 小さい画面では上寄せにする */
+                padding: 5px;
+            }
+            .chart-container {
+                padding: 10px;
+            }
+            .tabs button {
+                padding: 8px 12px; /* ボタンの余白を小さく */
+                font-size: 14px; /* 文字サイズを小さく */
+            }
+        }
+         @media (max-width: 400px) {
+            .tabs button {
+                font-size: 12px; /* さらに小さい画面用に文字サイズを調整 */
+            }
         }
     </style>
 </head>
@@ -57,12 +82,12 @@
         <canvas id="scatterChart"></canvas>
     </div>
 
-    <script>
-        // データセットをオブジェクトで管理し、キャラクターをアルファベット順に統一
-        const datasets = {
-            'master': {
-                title: 'キャラクター使用率 × 平均勝率 (Masterランク)',
-                data: `Character,Usage Rate,Average Win Rate (Total)
+<script>
+    // データセットをオブジェクトで管理し、キャラクターをアルファベット順に統一
+    const datasets = {
+        'master': {
+            title: 'キャラクター使用率 × 平均勝率 (Masterランク)',
+            data: `Character,Usage Rate,Average Win Rate (Total)
 A.K.I.,2.880,5.023
 BLANKA,1.279,5.069
 CAMMY,4.798,4.976
@@ -90,10 +115,10 @@ SAGAT,8.807,5.164
 TERRY,4.003,5.037
 VEGA,3.802,5.038
 ZANGIEF,4.006,4.916`
-            },
-            'highMaster': {
-                title: 'キャラクター使用率 × 平均勝率 (HighMasterランク)',
-                data: `Character,Usage Rate,Average Win Rate (Total)
+        },
+        'highMaster': {
+            title: 'キャラクター使用率 × 平均勝率 (HighMasterランク)',
+            data: `Character,Usage Rate,Average Win Rate (Total)
 A.K.I.,3.668,4.982
 BLANKA,2.078,5.102
 CAMMY,4.519,4.996
@@ -121,10 +146,10 @@ SAGAT,9.325,4.964
 TERRY,3.704,4.990
 VEGA,4.304,5.026
 ZANGIEF,2.802,4.928`
-            },
-            'grandMaster': {
-                title: 'キャラクター使用率 × 平均勝率 (GrandMasterランク)',
-                data: `Character,Usage Rate,Average Win Rate (Total)
+        },
+        'grandMaster': {
+            title: 'キャラクター使用率 × 平均勝率 (GrandMasterランク)',
+            data: `Character,Usage Rate,Average Win Rate (Total)
 A.K.I.,3.714,4.933
 BLANKA,2.817,5.043
 CAMMY,4.824,4.993
@@ -152,10 +177,10 @@ SAGAT,8.366,4.944
 TERRY,3.541,5.039
 VEGA,4.583,5.068
 ZANGIEF,2.482,4.899`
-            },
-            'ultimateMaster': {
-                title: 'キャラクター使用率 × 平均勝率 (Ultimate Masterランク)',
-                data: `Character,Usage Rate,Average Win Rate (Total)
+        },
+        'ultimateMaster': {
+            title: 'キャラクター使用率 × 平均勝率 (Ultimate Masterランク)',
+            data: `Character,Usage Rate,Average Win Rate (Total)
 A.K.I.,2.703,4.849
 BLANKA,3.408,4.983
 CAMMY,5.276,5.033
@@ -183,146 +208,160 @@ SAGAT,6.424,4.882
 TERRY,2.983,4.994
 VEGA,4.733,5.046
 ZANGIEF,2.312,4.973`
-            }
-        };
-
-        let scatterChart = null;
-
-        // 画像URLを生成するヘルパー関数
-        function getCharacterImageUrl(characterName) {
-            const cleanedName = characterName.toLowerCase().replace(/[^a-z0-9]/g, '');
-            if (cleanedName === 'ehonda') return 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_honda.jpg';
-            if (cleanedName === 'aki') return 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_aki.jpg';
-            return `https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_${cleanedName}.jpg`;
         }
+    };
 
-        // CSVデータをChart.jsが扱える形式に変換する関数
-        function processData(csvData) {
-            const lines = csvData.trim().split('\n');
-            lines.shift();
+    let scatterChart = null;
 
-            const chartData = lines.map(line => {
-                const parts = line.split(',');
-                const characterName = parts[0];
-                return {
-                    label: characterName,
-                    x: parseFloat(parts[1]),
-                    y: parseFloat(parts[2]),
-                    imageUrl: getCharacterImageUrl(characterName)
-                };
-            });
-            return chartData;
-        }
+    // 画像URLを生成するヘルパー関数
+    function getCharacterImageUrl(characterName) {
+        const cleanedName = characterName.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (cleanedName === 'ehonda') return 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_honda.jpg';
+        if (cleanedName === 'aki') return 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_aki.jpg';
+        return `https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_${cleanedName}.jpg`;
+    }
 
-        // チャートを描画または更新する関数
-        function updateChart(rank) {
-            const data = datasets[rank];
-            const processedData = processData(data.data);
+    // CSVデータをChart.jsが扱える形式に変換する関数
+    function processData(csvData) {
+        const lines = csvData.trim().split('\n');
+        lines.shift();
 
-            const characterImages = processedData.map(dataPoint => {
-                const img = new Image();
-                img.src = dataPoint.imageUrl;
-                img.width = 30;
-                img.height = 14;
-                return img;
-            });
+        const chartData = lines.map(line => {
+            const parts = line.split(',');
+            const characterName = parts[0];
+            return {
+                label: characterName,
+                x: parseFloat(parts[1]),
+                y: parseFloat(parts[2]),
+                imageUrl: getCharacterImageUrl(characterName)
+            };
+        });
+        return chartData;
+    }
 
-            if (scatterChart) {
-                scatterChart.data.datasets[0].data = processedData;
-                scatterChart.data.datasets[0].pointStyle = characterImages;
-                scatterChart.update();
-            } else {
-                const ctx = document.getElementById('scatterChart').getContext('2d');
-                scatterChart = new Chart(ctx, {
-                    type: 'scatter',
-                    data: {
-                        datasets: [{
-                            label: 'キャラクター別 使用率 × 勝率',
-                            data: processedData,
-                            pointStyle: characterImages,
-                            pointRadius: 15,
-                            pointHoverRadius: 18,
-                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        }]
+    // チャートを描画または更新する関数
+    function updateChart(rank) {
+        const data = datasets[rank];
+        const processedData = processData(data.data);
+        
+        // ★ 変更点1: 画面幅に応じて画像とポイントのサイズを決定
+        const isMobile = window.innerWidth < 600;
+        const imageWidth = isMobile ? 24 : 30;
+        const imageHeight = isMobile ? 11 : 14;
+        const pointRadius = isMobile ? 12 : 15;
+        const hoverRadius = isMobile ? 15 : 18;
+
+
+        const characterImages = processedData.map(dataPoint => {
+            const img = new Image();
+            img.src = dataPoint.imageUrl;
+            img.width = imageWidth;   // 動的な幅を適用
+            img.height = imageHeight; // 動的な高さを適用
+            return img;
+        });
+
+        if (scatterChart) {
+            scatterChart.data.datasets[0].data = processedData;
+            scatterChart.data.datasets[0].pointStyle = characterImages;
+            // ★ 変更点2: pointRadiusなども更新
+            scatterChart.data.datasets[0].pointRadius = pointRadius;
+            scatterChart.data.datasets[0].pointHoverRadius = hoverRadius;
+            scatterChart.update();
+        } else {
+            const ctx = document.getElementById('scatterChart').getContext('2d');
+            scatterChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'キャラクター別 使用率 × 勝率',
+                        data: processedData,
+                        pointStyle: characterImages,
+                        pointRadius: pointRadius, // 動的な半径を適用
+                        pointHoverRadius: hoverRadius, // 動的な半径を適用
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    animation: {
+                        duration: 800,
+                        easing: 'easeInOutQuad'
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: true,
-                        animation: {
-                            duration: 800,
-                            easing: 'easeInOutQuad'
-                        },
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const dataPoint = context.raw;
-                                        let label = dataPoint.label || '';
-                                        if (label) label += ': ';
-                                        label += `(使用率: ${dataPoint.x.toFixed(3)}%, 勝率: ${dataPoint.y.toFixed(3)}%)`;
-                                        return label;
-                                    }
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const dataPoint = context.raw;
+                                    let label = dataPoint.label || '';
+                                    if (label) label += ': ';
+                                    label += `(使用率: ${dataPoint.x.toFixed(3)}%, 勝率: ${dataPoint.y.toFixed(3)}%)`;
+                                    return label;
                                 }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                type: 'linear',
-                                position: 'bottom',
-                                title: {
-                                    display: true,
-                                    text: '使用率 (%)'
-                                },
-                                min: 0,
-                                max: 10,
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: '平均勝率 (%)' // 縦軸のタイトルを統一
-                                },
-                                suggestedMin: 4.8,
-                                suggestedMax: 5.2
                             }
                         }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: '使用率 (%)'
+                            },
+                            min: 0,
+                            max: 10,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '平均勝率 (%)'
+                            },
+                            suggestedMin: 4.8,
+                            suggestedMax: 5.2
+                        }
                     }
-                });
-            }
+                }
+            });
         }
+    }
 
-        // ボタンのクリックイベントを処理
-        document.getElementById('ultimateMasterBtn').addEventListener('click', () => {
+    // ボタンのクリックイベントを処理
+    document.querySelectorAll('.tabs button').forEach(button => {
+        button.addEventListener('click', (e) => {
             document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('ultimateMasterBtn').classList.add('active');
-            updateChart('ultimateMaster');
+            e.currentTarget.classList.add('active');
+            const rank = e.currentTarget.id.replace('Btn', '');
+            updateChart(rank);
         });
+    });
 
-        document.getElementById('masterBtn').addEventListener('click', () => {
-            document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('masterBtn').classList.add('active');
-            updateChart('master');
-        });
+    // ★ 変更点3: ウィンドウリサイズ時にチャートを再描画するイベントリスナーを追加
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (scatterChart) {
+                // 既存のチャートを破棄
+                scatterChart.destroy();
+                scatterChart = null;
+                // 現在アクティブなタブの情報を元に再描画
+                const activeRank = document.querySelector('.tabs button.active').id.replace('Btn', '');
+                updateChart(activeRank);
+            }
+        }, 250); // リサイズ終了後に実行するための遅延
+    });
 
-        document.getElementById('grandMasterBtn').addEventListener('click', () => {
-            document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('grandMasterBtn').classList.add('active');
-            updateChart('grandMaster');
-        });
 
-        document.getElementById('highMasterBtn').addEventListener('click', () => {
-            document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('highMasterBtn').classList.add('active');
-            updateChart('highMaster');
-        });
-
-        // 初回はMasterのデータを表示
-        updateChart('master');
-    </script>
+    // 初回はMasterのデータを表示
+    document.getElementById('masterBtn').classList.add('active');
+    updateChart('master');
+</script>
 
 </body>
 </html>
