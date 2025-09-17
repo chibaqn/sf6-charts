@@ -4,77 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>キャラクター使用率×平均勝率 散布図 (アニメーション)</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="datasets.js"></script>
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .tabs {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px; /* 画像間の隙間を調整 */
-            margin-bottom: 20px;
-        }
-        
-        .tabs img {
-            height: 50px; /* 画像の高さを指定 */
-            cursor: pointer;
-            opacity: 0.5; /* 非アクティブな画像を半透明に */
-            transition: all 0.3s ease;
-            border: 3px solid transparent; /* 枠線のスペースを確保 */
-            border-radius: 8px; /* 角を丸める */
-        }
-        .tabs img.active {
-            opacity: 1; /* アクティブな画像は不透明に */
-            border: 3px solid #007bff; /* アクティブな画像に青い枠線を追加 */
-        }
-
-        @media (max-width: 600px) {
-            body {
-                align-items: flex-start;
-                padding: 5px;
-            }
-            .chart-container {
-                padding: 10px;
-            }
-            
-            .tabs img {
-                height: 40px; /* スマホ表示では画像を少し小さく */
-            }
-            
-        }
-         @media (max-width: 400px) {
-            .tabs {
-                gap: 10px; /* さらに小さい画面用に隙間を調整 */
-            }
-            .tabs img {
-                height: 35px;
-            }
-        }
-    </style>
+    <script src="main.js"></script>
 </head>
 <body>
-
     <div class="chart-container">
+        <div class="zoom-controls" style="text-align:right; margin-bottom:10px;">
+            <button id="zoomInBtn" title="拡大" style="font-size:1.2em;">＋</button>
+            <button id="zoomOutBtn" title="縮小" style="font-size:1.2em;">－</button>
+        </div>
         <div class="tabs">
             <img id="masterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank36.png" alt="Master Rank" title="Master">
             <img id="highMasterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank40.png" alt="HighMaster Rank" title="HighMaster">
@@ -82,131 +22,10 @@
             <img id="ultimateMasterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank42.png" alt="UltimateMaster Rank" title="UltimateMaster">
         </div>
         <canvas id="scatterChart"></canvas>
-        <div class="info-links" style="margin-top:20px; text-align:center;">
+        <div class="info-links">
             <a href="https://www.streetfighter.com/6/buckler/ja-jp/stats/usagerate_master/202508" target="_blank" rel="noopener">使用率データ元</a> /
             <a href="https://www.streetfighter.com/6/buckler/ja-jp/stats/dia_master/202508" target="_blank" rel="noopener">ダイアグラムデータ元</a>
         </div>
     </div>
-
-    <script>
-        // datasetsは外部ファイルdatasets.jsから読み込みます
-        let scatterChart = null;
-
-        function getCharacterImageUrl(characterName) {
-            const cleanedName = characterName.toLowerCase().replace(/[^a-z0-9]/g, '');
-            if (cleanedName === 'ehonda') return 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_honda.jpg';
-            if (cleanedName === 'aki') return 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_aki.jpg';
-            return `https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_${cleanedName}.jpg`;
-        }
-
-        function processData(csvData) {
-            const lines = csvData.trim().split('\n');
-            lines.shift();
-            return lines.map(line => {
-                const parts = line.split(',');
-                return {
-                    label: parts[0],
-                    x: parseFloat(parts[1]),
-                    y: parseFloat(parts[2]),
-                    imageUrl: getCharacterImageUrl(parts[0])
-                };
-            });
-        }
-
-        function updateChart(rank) {
-            const data = datasets[rank];
-            const processedData = processData(data.data);
-            
-            const isMobile = window.innerWidth < 600;
-            const imageWidth = isMobile ? 24 : 30;
-            const imageHeight = isMobile ? 11 : 14;
-            const pointRadius = isMobile ? 12 : 15;
-            const hoverRadius = isMobile ? 15 : 18;
-
-            const characterImages = processedData.map(dataPoint => {
-                const img = new Image();
-                img.src = dataPoint.imageUrl;
-                img.width = imageWidth;
-                img.height = imageHeight;
-                return img;
-            });
-
-            if (scatterChart) {
-                scatterChart.data.datasets[0].data = processedData;
-                scatterChart.data.datasets[0].pointStyle = characterImages;
-                scatterChart.data.datasets[0].pointRadius = pointRadius;
-                scatterChart.data.datasets[0].pointHoverRadius = hoverRadius;
-                scatterChart.update();
-            } else {
-                const ctx = document.getElementById('scatterChart').getContext('2d');
-                scatterChart = new Chart(ctx, {
-                    type: 'scatter',
-                    data: {
-                        datasets: [{
-                            data: processedData,
-                            pointStyle: characterImages,
-                            pointRadius: pointRadius,
-                            pointHoverRadius: hoverRadius,
-                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: true,
-                        animation: {
-                            duration: 800,
-                            easing: 'easeInOutQuad'
-                        },
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const dataPoint = context.raw;
-                                        return `${dataPoint.label || ''}: (使用率: ${dataPoint.x.toFixed(3)}%, 勝率: ${dataPoint.y.toFixed(3)}%)`;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: { type: 'linear', position: 'bottom', title: { display: true, text: '使用率 (%)' }, min: 0, max: 10, ticks: { stepSize: 1 } },
-                            y: { title: { display: true, text: '勝率（Total）' }, suggestedMin: 4.8, suggestedMax: 5.2 }
-                        }
-                    }
-                });
-            }
-        }
-
-        
-        document.querySelectorAll('.tabs img').forEach(image => {
-            image.addEventListener('click', (e) => {
-                document.querySelectorAll('.tabs img').forEach(img => img.classList.remove('active'));
-                const clickedImage = e.currentTarget;
-                clickedImage.classList.add('active');
-                const rank = clickedImage.id.replace('Btn', '');
-                updateChart(rank);
-            });
-        });
-        
-
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                if (scatterChart) {
-                    scatterChart.destroy();
-                    scatterChart = null;
-                    const activeRank = document.querySelector('.tabs img.active').id.replace('Btn', '');
-                    updateChart(activeRank);
-                }
-            }, 250);
-        });
-
-        // 初回はMasterのデータを表示
-        document.getElementById('masterBtn').classList.add('active');
-        updateChart('master');
-    </script>
-
 </body>
 </html>
