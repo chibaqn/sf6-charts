@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>キャラクター使用率×平均勝率 散布図 (アニメーション)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="datasets.js"></script>
+    <script src="datasets.js"></script>
     <style>
         body {
             font-family: sans-serif;
@@ -47,7 +47,6 @@
             opacity: 1; /* アクティブな画像は不透明に */
             border: 3px solid #007bff; /* アクティブな画像に青い枠線を追加 */
         }
-        /* ▲▲▲ ここまで変更 ▲▲▲ */
 
         @media (max-width: 600px) {
             body {
@@ -77,18 +76,20 @@
 
     <div class="chart-container">
         <div class="tabs">
-             <img id="masterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank36.png" alt="Master Rank" title="Master">
-             <img id="highMasterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank40.png" alt="HighMaster Rank" title="HighMaster">
-             <img id="grandMasterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank41.png" alt="GrandMaster Rank" title="GrandMaster">
-             <img id="ultimateMasterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank42.png" alt="UltimateMaster Rank" title="UltimateMaster">
+            <img id="masterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank36.png" alt="Master Rank" title="Master">
+            <img id="highMasterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank40.png" alt="HighMaster Rank" title="HighMaster">
+            <img id="grandMasterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank41.png" alt="GrandMaster Rank" title="GrandMaster">
+            <img id="ultimateMasterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank42.png" alt="UltimateMaster Rank" title="UltimateMaster">
         </div>
         <canvas id="scatterChart"></canvas>
+        <div class="info-links" style="margin-top:20px; text-align:center;">
+            <a href="https://www.streetfighter.com/6/buckler/ja-jp/stats/usagerate_master/202508" target="_blank" rel="noopener">使用率データ元</a> /
+            <a href="https://www.streetfighter.com/6/buckler/ja-jp/stats/dia_master/202508" target="_blank" rel="noopener">ダイアグラムデータ元</a>
+        </div>
     </div>
 
     <script>
-        // データセットをオブジェクトで管理し、キャラクターをアルファベット順に統一
-            // datasetsは外部ファイルdatasets.jsから読み込みます
-
+        // datasetsは外部ファイルdatasets.jsから読み込みます
         let scatterChart = null;
 
         function getCharacterImageUrl(characterName) {
@@ -142,7 +143,6 @@
                     type: 'scatter',
                     data: {
                         datasets: [{
-                            label: 'キャラクター別 使用率 × 勝率',
                             data: processedData,
                             pointStyle: characterImages,
                             pointRadius: pointRadius,
