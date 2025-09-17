@@ -1,6 +1,9 @@
 let scatterChart = null;
 let zoomLevel = 1; // 拡大率（1が標準）
 
+// 各ランクごとのデフォルトスケールを定義
+const defaultScales = { x: { min: 0, max: 10 }, y: { min: 4.8, max: 5.20 } };
+
 function getCharacterImageUrl(characterName) {
     const cleanedName = characterName.toLowerCase().replace(/[^a-z0-9]/g, '');
     if (cleanedName === 'ehonda') return 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_honda.jpg';
@@ -41,11 +44,36 @@ function updateChart(rank) {
         return img;
     });
 
+    // スケールオプションを決定
+    const dynamicScaleEnabled = document.getElementById('dynamicScaleBtn').classList.contains('active');
+    let xScaleOptions, yScaleOptions;
+
+    if (dynamicScaleEnabled) {
+        // 動的スケール: データから最小値/最大値を計算
+        const xValues = processedData.map(d => d.x);
+        const yValues = processedData.map(d => d.y);
+        const minX = Math.min(...xValues);
+        const maxX = Math.max(...xValues);
+        const minY = Math.min(...yValues);
+        const maxY = Math.max(...yValues);
+        const xPadding = (maxX - minX) * 0.1;
+        const yPadding = (maxY - minY) * 0.1;
+
+        xScaleOptions = { type: 'linear', position: 'bottom', title: { display: true, text: 'キャラクター使用率 (%)' }, min: Math.max(0, minX - xPadding), max: maxX + xPadding, ticks: { stepSize: 0.5 } };
+        yScaleOptions = { title: { display: true, text: '対戦ダイアグラム（トータル勝率）' }, min: minY - yPadding, max: maxY + yPadding, ticks: { stepSize: 0.05 } };
+    } else {
+        // 固定スケール: 事前定義された値を使用
+        xScaleOptions = { type: 'linear', position: 'bottom', title: { display: true, text: 'キャラクター使用率 (%)' }, min: defaultScales.x.min, max: defaultScales.x.max, ticks: { stepSize: 0.5 } };
+        yScaleOptions = { title: { display: true, text: '対戦ダイアグラム（トータル勝率）' }, min: defaultScales.y.min, max: defaultScales.y.max, ticks: { stepSize: 0.05 } };
+    }
+
     if (scatterChart) {
         scatterChart.data.datasets[0].data = processedData;
         scatterChart.data.datasets[0].pointStyle = characterImages;
         scatterChart.data.datasets[0].pointRadius = pointRadius;
         scatterChart.data.datasets[0].pointHoverRadius = hoverRadius;
+        scatterChart.options.scales.x = xScaleOptions;
+        scatterChart.options.scales.y = yScaleOptions;
         scatterChart.update();
     } else {
         const ctx = document.getElementById('scatterChart').getContext('2d');
@@ -70,8 +98,8 @@ function updateChart(rank) {
                     easing: 'easeInOutQuad'
                 },
                 scales: {
-                    x: { type: 'linear', position: 'bottom', title: { display: true, text: '使用率 (%)' }, min: 0, max: 10, ticks: { stepSize: 1 } },
-                    y: { title: { display: true, text: '勝率（Total）' }, suggestedMin: 4.8, suggestedMax: 5.2 }
+                    x: xScaleOptions,
+                    y: yScaleOptions
                 },
                 plugins: {
                     zoom: {
@@ -130,6 +158,34 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('resetZoomBtn').addEventListener('click', () => {
         scatterChart.resetZoom();
+    });
+
+    // スケール切り替えボタンのイベント
+    const fixedScaleBtn = document.getElementById('fixedScaleBtn');
+    const dynamicScaleBtn = document.getElementById('dynamicScaleBtn');
+
+    const handleScaleToggle = (isDynamic) => {
+        fixedScaleBtn.classList.toggle('active', !isDynamic);
+        dynamicScaleBtn.classList.toggle('active', isDynamic);
+
+        const activeRank = document.querySelector('.tabs img.active').id.replace('Btn', '');
+        if (scatterChart) {
+            scatterChart.destroy();
+            scatterChart = null;
+        }
+        updateChart(activeRank);
+    };
+
+    fixedScaleBtn.addEventListener('click', () => {
+        if (!fixedScaleBtn.classList.contains('active')) {
+            handleScaleToggle(false);
+        }
+    });
+
+    dynamicScaleBtn.addEventListener('click', () => {
+        if (!dynamicScaleBtn.classList.contains('active')) {
+            handleScaleToggle(true);
+        }
     });
 
     let resizeTimer;

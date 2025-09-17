@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>キャラクター使用率×平均勝率 散布図 (アニメーション)</title>
+    <title>キャラクター使用率×平均勝率 散布図</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
@@ -17,17 +17,21 @@
             <button id="zoomInBtn" title="拡大">＋</button>
             <button id="zoomOutBtn" title="縮小">－</button>
             <button id="resetZoomBtn" title="リセット">リセット</button>
+            <div class="scale-toggle-container" title="軸のスケールを固定/動的に切り替え">
+                <button id="fixedScaleBtn" class="scale-btn active">固定</button>
+                <button id="dynamicScaleBtn" class="scale-btn">動的</button>
+            </div>
         </div>
         <div class="tabs">
-            <img id="masterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank36.png" alt="Master Rank" title="Master">
-            <img id="highMasterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank40.png" alt="HighMaster Rank" title="HighMaster">
-            <img id="grandMasterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank41.png" alt="GrandMaster Rank" title="GrandMaster">
-            <img id="ultimateMasterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank42.png" alt="UltimateMaster Rank" title="UltimateMaster">
+            <img id="masterBtn" src="images/ranks/master.png" alt="Master Rank" title="Master">
+            <img id="highMasterBtn" src="images/ranks/high_master.png" alt="HighMaster Rank" title="HighMaster">
+            <img id="grandMasterBtn" src="images/ranks/grand_master.png" alt="GrandMaster Rank" title="GrandMaster">
+            <img id="ultimateMasterBtn" src="images/ranks/ultimate_master.png" alt="UltimateMaster Rank" title="UltimateMaster">
         </div>
         <canvas id="scatterChart"></canvas>
         <div class="info-links">
-            <a href="https://www.streetfighter.com/6/buckler/ja-jp/stats/usagerate_master/202508" target="_blank" rel="noopener">使用率データ元</a> /
-            <a href="https://www.streetfighter.com/6/buckler/ja-jp/stats/dia_master/202508" target="_blank" rel="noopener">ダイアグラムデータ元</a>
+            <a href="https://www.streetfighter.com/6/buckler/ja-jp/stats/usagerate_master/202508" target="_blank" rel="noopener">キャラクター使用率</a> /
+            <a href="https://www.streetfighter.com/6/buckler/ja-jp/stats/dia_master/202508" target="_blank" rel="noopener">対戦ダイアグラム</a>
         </div>
     </div>
 </body>
