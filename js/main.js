@@ -69,7 +69,26 @@ function updateChart(rank) {
                     duration: 800,
                     easing: 'easeInOutQuad'
                 },
+                scales: {
+                    x: { type: 'linear', position: 'bottom', title: { display: true, text: '使用率 (%)' }, min: 0, max: 10, ticks: { stepSize: 1 } },
+                    y: { title: { display: true, text: '勝率（Total）' }, suggestedMin: 4.8, suggestedMax: 5.2 }
+                },
                 plugins: {
+                    zoom: {
+                        pan: {
+                            enabled: true,
+                            mode: 'xy',
+                        },
+                        zoom: {
+                            pinch: {
+                                enabled: true
+                            },
+                            wheel: {
+                                enabled: true
+                            },
+                            mode: 'xy',
+                        }
+                    },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
@@ -81,10 +100,6 @@ function updateChart(rank) {
                     legend: {
                         display: false
                     },
-                },
-                scales: {
-                    x: { type: 'linear', position: 'bottom', title: { display: true, text: '使用率 (%)' }, min: 0, max: 10, ticks: { stepSize: 1 } },
-                    y: { title: { display: true, text: '勝率（Total）' }, suggestedMin: 4.8, suggestedMax: 5.2 }
                 }
             }
         });
@@ -92,6 +107,8 @@ function updateChart(rank) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+    const ctx = document.getElementById('scatterChart').getContext('2d');
+
     document.querySelectorAll('.tabs img').forEach(image => {
         image.addEventListener('click', (e) => {
             document.querySelectorAll('.tabs img').forEach(img => img.classList.remove('active'));
@@ -102,16 +119,17 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 拡大縮小ボタンのイベント
+    // Zoom buttons
     document.getElementById('zoomInBtn').addEventListener('click', () => {
-        zoomLevel = Math.min(zoomLevel + 0.2, 2); // 最大2倍
-        const activeRank = document.querySelector('.tabs img.active').id.replace('Btn', '');
-        updateChart(activeRank);
+        scatterChart.zoom(1.1);
     });
+
     document.getElementById('zoomOutBtn').addEventListener('click', () => {
-        zoomLevel = Math.max(zoomLevel - 0.2, 0.5); // 最小0.5倍
-        const activeRank = document.querySelector('.tabs img.active').id.replace('Btn', '');
-        updateChart(activeRank);
+        scatterChart.zoom(0.9);
+    });
+
+    document.getElementById('resetZoomBtn').addEventListener('click', () => {
+        scatterChart.resetZoom();
     });
 
     let resizeTimer;

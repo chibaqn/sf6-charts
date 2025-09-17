@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>キャラクター使用率×平均勝率 散布図 (アニメーション)</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="datasets.js"></script>
-    <script src="main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="js/datasets.js"></script>
+    <script src="js/main.js"></script>
 </head>
 <body>
     <div class="chart-container">
-        <div class="zoom-controls" style="text-align:right; margin-bottom:10px;">
-            <button id="zoomInBtn" title="拡大" style="font-size:1.2em;">＋</button>
-            <button id="zoomOutBtn" title="縮小" style="font-size:1.2em;">－</button>
+        <div class="zoom-controls">
+            <button id="zoomInBtn" title="拡大">＋</button>
+            <button id="zoomOutBtn" title="縮小">－</button>
+            <button id="resetZoomBtn" title="リセット">リセット</button>
         </div>
         <div class="tabs">
             <img id="masterBtn" src="https://www.streetfighter.com/6/buckler/assets/images/stats/rank36.png" alt="Master Rank" title="Master">
