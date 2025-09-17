@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>キャラクター使用率×平均勝率 散布図 (アニメーション)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .chart-container {
+            position: relative;
+            width: 90vw;
+            max-width: 900px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tabs button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #eee;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tabs button.active {
+            background-color: #fff;
+            border-bottom: 2px solid #007bff;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chart-container">
+        <div class="tabs">
+            <button id="masterBtn" class="active">Master</button>
+            <button id="highMasterBtn">HighMaster</button>
+            <button id="grandMasterBtn">GrandMaster</button>
+            <button id="ultimateMasterBtn">UltimateMaster</button>
+        </div>
+        <canvas id="scatterChart"></canvas>
+    </div>
+
+    <script>
+        // データセットをオブジェクトで管理し、キャラクターをアルファベット順に統一
+        const datasets = {
+            'master': {
+                title: 'キャラクター使用率 × 平均勝率 (Masterランク)',
+                data: `Character,Usage Rate,Average Win Rate (Total)
+A.K.I.,2.880,5.023
+BLANKA,1.279,5.069
+CAMMY,4.798,4.976
+CHUN-LI,2.684,5.012
+DEE JAY,2.762,5.064
+DHALSIM,0.902,5.134
+E.HONDA,1.133,5.167
+ED,3.483,4.939
+ELENA,2.361,5.043
+GOUKI,9.129,4.895
+GUILE,1.667,5.003
+JAMIE,4.537,4.966
+JP,3.469,5.092
+JURI,4.864,4.982
+KEN,5.662,4.976
+KIMBERLY,1.772,5.109
+LILY,0.869,5.029
+LUKE,4.568,5.049
+MAI,4.516,4.976
+MANON,3.355,4.968
+MARISA,3.091,5.009
+RASHID,1.427,5.064
+RYU,8.174,4.946
+SAGAT,8.807,5.164
+TERRY,4.003,5.037
+VEGA,3.802,5.038
+ZANGIEF,4.006,4.916`
+            },
+            'highMaster': {
+                title: 'キャラクター使用率 × 平均勝率 (HighMasterランク)',
+                data: `Character,Usage Rate,Average Win Rate (Total)
+A.K.I.,3.668,4.982
+BLANKA,2.078,5.102
+CAMMY,4.519,4.996
+CHUN-LI,2.891,4.991
+DEE JAY,3.655,5.011
+DHALSIM,1.758,5.116
+E.HONDA,2.003,5.141
+ED,3.176,5.005
+ELENA,2.606,5.005
+GOUKI,6.041,4.927
+GUILE,1.996,4.986
+JAMIE,3.836,4.940
+JP,4.587,5.046
+JURI,4.547,4.962
+KEN,5.104,4.977
+KIMBERLY,2.920,5.092
+LILY,1.179,5.038
+LUKE,5.121,5.024
+MAI,4.169,5.040
+MANON,2.868,4.956
+MARISA,3.547,5.044
+RASHID,2.178,5.024
+RYU,5.419,4.953
+SAGAT,9.325,4.964
+TERRY,3.704,4.990
+VEGA,4.304,5.026
+ZANGIEF,2.802,4.928`
+            },
+            'grandMaster': {
+                title: 'キャラクター使用率 × 平均勝率 (GrandMasterランク)',
+                data: `Character,Usage Rate,Average Win Rate (Total)
+A.K.I.,3.714,4.933
+BLANKA,2.817,5.043
+CAMMY,4.824,4.993
+CHUN-LI,2.959,5.063
+DEE JAY,4.072,5.048
+DHALSIM,2.169,4.970
+E.HONDA,2.490,5.061
+ED,3.051,5.024
+ELENA,2.797,4.999
+GOUKI,5.025,4.922
+GUILE,1.964,4.942
+JAMIE,3.453,5.021
+JP,4.862,5.035
+JURI,4.243,4.991
+KEN,4.641,5.010
+KIMBERLY,4.080,5.051
+LILY,1.451,4.997
+LUKE,4.488,4.985
+MAI,4.158,5.065
+MANON,2.803,4.951
+MARISA,3.946,4.996
+RASHID,2.301,5.006
+RYU,4.722,4.964
+SAGAT,8.366,4.944
+TERRY,3.541,5.039
+VEGA,4.583,5.068
+ZANGIEF,2.482,4.899`
+            },
+            'ultimateMaster': {
+                title: 'キャラクター使用率 × 平均勝率 (Ultimate Masterランク)',
+                data: `Character,Usage Rate,Average Win Rate (Total)
+A.K.I.,2.703,4.849
+BLANKA,3.408,4.983
+CAMMY,5.276,5.033
+CHUN-LI,3.092,5.028
+DEE JAY,4.671,4.893
+DHALSIM,2.541,5.015
+E.HONDA,2.843,5.037
+ED,3.451,5.078
+ELENA,2.744,5.021
+GOUKI,4.268,4.963
+GUILE,1.934,5.122
+JAMIE,3.003,4.950
+JP,4.951,4.995
+JURI,4.205,4.967
+KEN,4.316,4.998
+KIMBERLY,4.443,4.983
+LILY,1.875,5.063
+LUKE,4.486,5.008
+MAI,5.438,5.153
+MANON,2.631,4.950
+MARISA,4.205,5.013
+RASHID,2.946,5.097
+RYU,4.118,4.984
+SAGAT,6.424,4.882
+TERRY,2.983,4.994
+VEGA,4.733,5.046
+ZANGIEF,2.312,4.973`
+            }
+        };
+
+        let scatterChart = null;
+
+        // 画像URLを生成するヘルパー関数
+        function getCharacterImageUrl(characterName) {
+            const cleanedName = characterName.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if (cleanedName === 'ehonda') return 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_honda.jpg';
+            if (cleanedName === 'aki') return 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_aki.jpg';
+            return `https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_${cleanedName}.jpg`;
+        }
+
+        // CSVデータをChart.jsが扱える形式に変換する関数
+        function processData(csvData) {
+            const lines = csvData.trim().split('\n');
+            lines.shift();
+
+            const chartData = lines.map(line => {
+                const parts = line.split(',');
+                const characterName = parts[0];
+                return {
+                    label: characterName,
+                    x: parseFloat(parts[1]),
+                    y: parseFloat(parts[2]),
+                    imageUrl: getCharacterImageUrl(characterName)
+                };
+            });
+            return chartData;
+        }
+
+        // チャートを描画または更新する関数
+        function updateChart(rank) {
+            const data = datasets[rank];
+            const processedData = processData(data.data);
+
+            const characterImages = processedData.map(dataPoint => {
+                const img = new Image();
+                img.src = dataPoint.imageUrl;
+                img.width = 30;
+                img.height = 14;
+                return img;
+            });
+
+            if (scatterChart) {
+                scatterChart.data.datasets[0].data = processedData;
+                scatterChart.data.datasets[0].pointStyle = characterImages;
+                scatterChart.update();
+            } else {
+                const ctx = document.getElementById('scatterChart').getContext('2d');
+                scatterChart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'キャラクター別 使用率 × 勝率',
+                            data: processedData,
+                            pointStyle: characterImages,
+                            pointRadius: 15,
+                            pointHoverRadius: 18,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        animation: {
+                            duration: 800,
+                            easing: 'easeInOutQuad'
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const dataPoint = context.raw;
+                                        let label = dataPoint.label || '';
+                                        if (label) label += ': ';
+                                        label += `(使用率: ${dataPoint.x.toFixed(3)}%, 勝率: ${dataPoint.y.toFixed(3)}%)`;
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: {
+                                    display: true,
+                                    text: '使用率 (%)'
+                                },
+                                min: 0,
+                                max: 10,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: '平均勝率 (%)' // 縦軸のタイトルを統一
+                                },
+                                suggestedMin: 4.8,
+                                suggestedMax: 5.2
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // ボタンのクリックイベントを処理
+        document.getElementById('ultimateMasterBtn').addEventListener('click', () => {
+            document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('ultimateMasterBtn').classList.add('active');
+            updateChart('ultimateMaster');
+        });
+
+        document.getElementById('masterBtn').addEventListener('click', () => {
+            document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('masterBtn').classList.add('active');
+            updateChart('master');
+        });
+
+        document.getElementById('grandMasterBtn').addEventListener('click', () => {
+            document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('grandMasterBtn').classList.add('active');
+            updateChart('grandMaster');
+        });
+
+        document.getElementById('highMasterBtn').addEventListener('click', () => {
+            document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('highMasterBtn').classList.add('active');
+            updateChart('highMaster');
+        });
+
+        // 初回はMasterのデータを表示
+        updateChart('master');
+    </script>
+
+</body>
+</html>
