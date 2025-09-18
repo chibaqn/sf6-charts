@@ -118,15 +118,15 @@ function updateChart(rank) {
                 plugins: {
                     zoom: {
                         pan: {
-                            enabled: true,
+                            enabled: false,
                             mode: 'xy',
                         },
                         zoom: {
                             pinch: {
-                                enabled: true
+                                enabled: false
                             },
                             wheel: {
-                                enabled: true
+                                enabled: false
                             },
                             mode: 'xy',
                         }
