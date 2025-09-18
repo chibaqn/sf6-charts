@@ -1,5 +1,4 @@
 let scatterChart = null;
-let zoomLevel = 1; // 拡大率（1が標準）
 
 // 各ランクごとのデフォルトスケールを定義
 const defaultScales = { x: { min: 0, max: 11 }, y: { min: 4.8, max: 5.20 } };
@@ -46,10 +45,10 @@ function updateChart(rank) {
     }
     // 縦幅を計算
     const imageHeight = imageWidth * aspectRatio;
-    // 拡大率を反映
-    const pointRadius = 12 * zoomLevel;
-    const hoverRadius = 15 * zoomLevel;
+    const pointRadius = 12
+    const hoverRadius = 15
 
+    // 画像オブジェクトを作成
     const characterImages = processedData.map(dataPoint => {
         const img = new Image();
         img.src = dataPoint.imageUrl;
@@ -179,19 +178,6 @@ window.addEventListener('DOMContentLoaded', () => {
             const rank = clickedImage.id.replace('Btn', '');
             updateChart(rank);
         });
-    });
-
-    // Zoom buttons
-    document.getElementById('zoomInBtn').addEventListener('click', () => {
-        scatterChart.zoom(1.1);
-    });
-
-    document.getElementById('zoomOutBtn').addEventListener('click', () => {
-        scatterChart.zoom(0.9);
-    });
-
-    document.getElementById('resetZoomBtn').addEventListener('click', () => {
-        scatterChart.resetZoom();
     });
 
     // スケール切り替えボタンのイベント

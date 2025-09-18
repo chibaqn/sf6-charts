@@ -52,38 +52,11 @@ main {
     align-items: center;
 }
 
-.month-selector-container label {
-    margin-right: 10px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
 #month-selector {
     padding: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 14px;
-}
-
-.zoom-controls {
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.zoom-controls button, .scale-btn {
-    font-size: 1.2em;
-    padding: 3px 8px;
-    font-size: 12px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.zoom-controls button:hover, .scale-btn:hover {
-    background-color: #e9e9e9;
 }
 
 .scale-toggle-container {
@@ -167,13 +140,6 @@ footer {
 @media (min-width: 768px) {
     main {
         padding: 0 30px;
-    }
-}
-
-@media (max-width: 768px) {
-    .controls-container {
-        flex-direction: column;
-        align-items: flex-start;
     }
 }
 
