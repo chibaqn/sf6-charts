@@ -128,8 +128,6 @@ main {
     justify-content: center;
     gap: 10px;
     margin-bottom: 15px;
-    /* border-bottom: 2px solid #eee; */
-    /* padding-bottom: 15px; */
     cursor: pointer;
 }
 .tabs img {
@@ -166,6 +164,12 @@ footer {
 }
 
 /* Responsive adjustments */
+@media (min-width: 768px) {
+    main {
+        padding: 0 30px;
+    }
+}
+
 @media (max-width: 768px) {
     .controls-container {
         flex-direction: column;
