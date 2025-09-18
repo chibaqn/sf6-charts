@@ -2,7 +2,7 @@ let scatterChart = null;
 let zoomLevel = 1; // 拡大率（1が標準）
 
 // 各ランクごとのデフォルトスケールを定義
-const defaultScales = { x: { min: 0, max: 10 }, y: { min: 4.8, max: 5.20 } };
+const defaultScales = { x: { min: 0, max: 11 }, y: { min: 4.8, max: 5.20 } };
 
 function getCharacterImageUrl(characterName) {
     const cleanedName = characterName.toLowerCase().replace(/[^a-z0-9]/g, '');
