@@ -44,9 +44,11 @@ const updateChart = (rank) => {
         // アスペクト比を計算
         const aspectRatio = 23 / 50;
         let imageWidth;
-        if (window.innerWidth >= 700) {
+        if (window.innerWidth >= 1000) {
             imageWidth = 45;
-        } else if (window.innerWidth >= 600) { // 600以上700未満
+        } else if (window.innerWidth >= 800) { // 800以上1000未満
+            imageWidth = 35;
+        } else if (window.innerWidth >= 600) { // 600以上800未満
             imageWidth = 30;
         } else { // 600未満
             imageWidth = 22;
