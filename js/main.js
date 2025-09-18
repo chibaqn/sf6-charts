@@ -147,7 +147,7 @@ function initializeMonthSelector() {
         const option = document.createElement('option');
         option.value = month;
         const [year, monthNum] = month.split('-');
-        option.textContent = `${year}年${parseInt(monthNum, 10)}月`;
+        option.textContent = month;
         monthSelector.appendChild(option);
     });
 
