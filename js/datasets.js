@@ -1,4 +1,3 @@
-// キャラクターの画像URL
 const characterImageUrls = {
     'LUKE': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_luke.jpg',
     'JAMIE': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_jamie.jpg',
@@ -29,11 +28,10 @@ const characterImageUrls = {
     'SAGAT': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_sagat.jpg'
 };
 
-// 月ごとのキャラクター使用率 × 平均勝率のデータセット
 const monthlyData = {
     '2025-08': {
         'master': {
-            title: 'キャラクター使用率 × 平均勝率 (Masterランク) - 2025年8月',
+            title: 'キャラクター使用率 × ダイアグラム勝率 (Masterランク) - 2025年8月',
             data: `Character,Usage Rate,Average Win Rate (Total)
 LUKE,4.568,5.049
 JAMIE,4.537,4.966
@@ -64,7 +62,7 @@ ELENA,2.361,5.043
 SAGAT,8.807,5.164`
         },
         'highMaster': {
-            title: 'キャラクター使用率 × 平均勝率 (HighMasterランク) - 2025年8月',
+            title: 'キャラクター使用率 × ダイアグラム勝率 (HighMasterランク) - 2025年8月',
             data: `Character,Usage Rate,Average Win Rate (Total)
 LUKE,5.121,5.024
 JAMIE,3.836,4.940
@@ -95,7 +93,7 @@ ELENA,2.606,5.005
 SAGAT,9.325,4.964`
         },
         'grandMaster': {
-            title: 'キャラクター使用率 × 平均勝率 (GrandMasterランク) - 2025年8月',
+            title: 'キャラクター使用率 × ダイアグラム勝率 (GrandMasterランク) - 2025年8月',
             data: `Character,Usage Rate,Average Win Rate (Total)
 LUKE,4.488,4.985
 JAMIE,3.453,5.021
@@ -126,7 +124,7 @@ ELENA,2.797,4.999
 SAGAT,8.366,4.944`
         },
         'ultimateMaster': {
-            title: 'キャラクター使用率 × 平均勝率 (Ultimate Masterランク) - 2025年8月',
+            title: 'キャラクター使用率 × ダイアグラム勝率 (Ultimate Masterランク) - 2025年8月',
             data: `Character,Usage Rate,Average Win Rate (Total)
 LUKE,4.486,5.008
 JAMIE,3.003,4.950
@@ -159,7 +157,7 @@ SAGAT,6.424,4.882`
     },
     '2025-07': {
         'master': {
-            title: 'キャラクター使用率 × 平均勝率 (Masterランク) - 2025年7月',
+            title: 'キャラクター使用率 × ダイアグラム勝率 (Masterランク) - 2025年7月',
             data: `Character,Usage Rate,Average Win Rate (Total)
 LUKE,4.720,5.043
 JAMIE,5.260,4.997
@@ -189,7 +187,7 @@ MAI,4.713,5.000
 ELENA,3.438,5.035`
         },
         'highMaster': {
-            title: 'キャラクター使用率 × 平均勝率 (HighMasterランク) - 2025年7月',
+            title: 'キャラクター使用率 × ダイアグラム勝率 (HighMasterランク) - 2025年7月',
             data: `Character,Usage Rate,Average Win Rate (Total)
 LUKE,5.403,5.030
 JAMIE,5.074,4.951
@@ -219,7 +217,7 @@ MAI,4.646,5.036
 ELENA,3.612,4.998`
         },
         'grandMaster': {
-            title: 'キャラクター使用率 × 平均勝率 (GrandMasterランク) - 2025年7月',
+            title: 'キャラクター使用率 × ダイアグラム勝率 (GrandMasterランク) - 2025年7月',
             data: `Character,Usage Rate,Average Win Rate (Total)
 LUKE,5.344,5.000
 JAMIE,4.682,4.939
@@ -249,7 +247,7 @@ MAI,4.577,5.049
 ELENA,3.576,5.005`
         },
         'ultimateMaster': {
-            title: 'キャラクター使用率 × 平均勝率 (Ultimate Masterランク) - 2025年7月',
+            title: 'キャラクター使用率 × ダイアグラム勝率 (Ultimate Masterランク) - 2025年7月',
             data: `Character,Usage Rate,Average Win Rate (Total)
 LUKE,5.012,5.001
 JAMIE,4.133,4.966
@@ -277,6 +275,364 @@ VEGA,5.075,5.027
 TERRY,3.602,4.997
 MAI,4.881,5.105
 ELENA,3.174,4.971`
+        }
+    },
+    '2025-06': {
+        'master': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (Masterランク) - 2025年6月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,5.274,5.057
+JAMIE,5.689,5.003
+MANON,2.905,4.962
+KIMBERLY,1.525,5.098
+MARISA,3.500,5.056
+LILY,0.970,5.031
+JP,3.273,5.072
+JURI,4.891,4.984
+DEE JAY,2.717,5.062
+CAMMY,3.990,4.980
+RYU,11.585,4.980
+E.HONDA,1.163,5.122
+BLANKA,1.238,5.043
+GUILE,1.771,4.987
+KEN,5.855,4.982
+CHUN-LI,2.508,5.020
+ZANGIEF,5.404,4.876
+DHALSIM,0.968,5.106
+RASHID,1.524,5.011
+A.K.I.,2.594,5.026
+ED,3.234,4.956
+GOUKI,9.661,4.920
+VEGA,4.206,5.013
+TERRY,4.005,5.057
+MAI,5.080,4.973
+ELENA,4.472,5.153`
+        },
+        'highMaster': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (HighMasterランク) - 2025年6月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,6.013,5.044
+JAMIE,5.055,4.952
+MANON,2.868,4.956
+KIMBERLY,2.433,5.071
+MARISA,4.011,5.060
+LILY,1.277,5.049
+JP,4.647,5.034
+JURI,4.723,4.945
+DEE JAY,3.630,5.032
+CAMMY,3.933,4.986
+RYU,8.555,4.958
+E.HONDA,1.917,5.111
+BLANKA,1.727,5.050
+GUILE,1.920,4.996
+KEN,5.451,4.977
+CHUN-LI,2.863,4.993
+ZANGIEF,3.690,4.849
+DHALSIM,1.676,5.074
+RASHID,2.040,5.034
+A.K.I.,3.385,5.011
+ED,3.002,5.006
+GOUKI,6.677,4.882
+VEGA,4.648,5.025
+TERRY,4.153,5.044
+MAI,4.673,5.014
+ELENA,5.035,5.127`
+        },
+        'grandMaster': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (GrandMasterランク) - 2025年6月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,5.818,5.020
+JAMIE,4.831,4.954
+MANON,2.811,4.958
+KIMBERLY,3.265,5.025
+MARISA,4.449,5.022
+LILY,1.571,5.015
+JP,4.931,5.028
+JURI,4.793,4.997
+DEE JAY,4.114,5.033
+CAMMY,3.971,4.994
+RYU,7.206,5.030
+E.HONDA,2.437,5.118
+BLANKA,2.256,5.075
+GUILE,2.107,4.980
+KEN,5.093,4.977
+CHUN-LI,2.820,5.056
+ZANGIEF,3.522,4.852
+DHALSIM,2.180,4.998
+RASHID,2.300,4.961
+A.K.I.,3.609,4.971
+ED,2.912,4.958
+GOUKI,5.935,4.920
+VEGA,4.824,4.984
+TERRY,3.826,5.003
+MAI,4.297,5.013
+ELENA,4.119,5.092`
+        },
+        'ultimateMaster': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (Ultimate Masterランク) - 2025年6月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,5.258,4.992
+JAMIE,4.126,4.945
+MANON,2.544,4.971
+KIMBERLY,3.960,5.031
+MARISA,4.670,4.989
+LILY,1.832,5.002
+JP,5.878,5.038
+JURI,4.651,4.921
+DEE JAY,4.958,4.977
+CAMMY,4.419,5.042
+RYU,5.966,4.997
+E.HONDA,3.037,5.001
+BLANKA,3.549,5.005
+GUILE,2.091,5.011
+KEN,4.736,4.967
+CHUN-LI,3.239,5.011
+ZANGIEF,3.429,4.960
+DHALSIM,2.489,5.053
+RASHID,2.851,5.070
+A.K.I.,3.191,4.946
+ED,2.859,5.048
+GOUKI,4.993,4.939
+VEGA,4.964,5.001
+TERRY,2.941,5.038
+MAI,4.299,5.091
+ELENA,3.068,5.058`
+        }
+    },
+    '2025-05': {
+        'master': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (Masterランク) - 2025年5月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,4.487,5.058
+JAMIE,5.194,4.994
+MANON,3.353,5.002
+KIMBERLY,1.821,5.131
+MARISA,3.220,5.009
+LILY,1.183,5.046
+JP,3.654,5.091
+JURI,5.983,4.998
+DEE JAY,3.003,5.063
+CAMMY,4.812,4.997
+RYU,9.177,4.962
+E.HONDA,1.440,5.147
+BLANKA,1.405,5.053
+GUILE,1.878,5.014
+KEN,7.758,5.003
+CHUN-LI,2.011,5.047
+ZANGIEF,5.074,4.967
+DHALSIM,0.914,5.131
+RASHID,1.865,5.064
+A.K.I.,2.855,5.055
+ED,3.838,4.975
+GOUKI,12.236,4.928
+VEGA,4.542,5.041
+TERRY,3.311,5.035
+MAI,4.987,5.015`
+        },
+        'highMaster': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (HighMasterランク) - 2025年5月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,4.679,5.012
+JAMIE,4.548,4.967
+MANON,3.357,4.959
+KIMBERLY,3.046,5.093
+MARISA,3.550,5.000
+LILY,1.535,5.023
+JP,4.992,5.044
+JURI,5.805,4.964
+DEE JAY,3.925,5.029
+CAMMY,4.840,4.991
+RYU,6.368,4.937
+E.HONDA,2.356,5.120
+BLANKA,2.038,5.119
+GUILE,2.232,4.979
+KEN,7.015,5.004
+CHUN-LI,2.437,4.995
+ZANGIEF,4.071,4.980
+DHALSIM,1.776,5.106
+RASHID,2.728,5.011
+A.K.I.,3.910,5.002
+ED,3.543,4.987
+GOUKI,8.056,4.923
+VEGA,5.171,5.000
+TERRY,3.171,4.994
+MAI,4.850,5.047`
+        },
+        'grandMaster': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (GrandMasterランク) - 2025年5月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,4.511,5.030
+JAMIE,4.297,4.953
+MANON,3.082,4.947
+KIMBERLY,3.748,5.036
+MARISA,4.056,4.987
+LILY,1.755,5.072
+JP,5.579,5.036
+JURI,5.546,4.956
+DEE JAY,4.405,4.994
+CAMMY,4.797,5.034
+RYU,5.186,4.942
+E.HONDA,2.847,5.097
+BLANKA,2.773,5.032
+GUILE,2.216,4.978
+KEN,6.484,4.999
+CHUN-LI,2.392,5.076
+ZANGIEF,4.028,4.995
+DHALSIM,2.104,5.026
+RASHID,2.891,5.001
+A.K.I.,3.965,4.981
+ED,3.427,5.000
+GOUKI,7.264,4.934
+VEGA,5.020,5.037
+TERRY,2.934,4.951
+MAI,4.695,5.084`
+        },
+        'ultimateMaster': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (Ultimate Masterランク) - 2025年5月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,4.043,4.925
+JAMIE,3.716,4.946
+MANON,3.046,4.962
+KIMBERLY,3.945,5.024
+MARISA,3.771,4.912
+LILY,2.161,4.976
+JP,5.786,5.064
+JURI,5.086,4.967
+DEE JAY,4.531,4.955
+CAMMY,5.189,5.015
+RYU,3.945,4.991
+E.HONDA,3.535,4.960
+BLANKA,3.746,4.986
+GUILE,2.074,5.028
+KEN,6.272,4.976
+CHUN-LI,2.376,5.018
+ZANGIEF,5.026,5.080
+DHALSIM,2.433,5.046
+RASHID,3.458,5.016
+A.K.I.,3.316,4.947
+ED,3.118,5.049
+GOUKI,6.317,4.992
+VEGA,5.918,5.020
+TERRY,2.146,4.954
+MAI,5.044,5.113`
+        }
+    },
+    '2025-04': {
+        'master': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (Masterランク) - 2025年4月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,4.468,5.035
+JAMIE,5.041,4.998
+MANON,3.001,4.993
+KIMBERLY,1.784,5.091
+MARISA,3.145,4.999
+LILY,1.022,5.013
+JP,3.986,5.064
+JURI,6.278,4.985
+DEE JAY,3.054,5.038
+CAMMY,4.680,4.998
+RYU,9.525,4.968
+E.HONDA,1.262,5.092
+BLANKA,1.246,5.039
+GUILE,1.921,5.000
+KEN,7.565,5.002
+CHUN-LI,2.035,5.021
+ZANGIEF,4.640,4.982
+DHALSIM,0.811,5.100
+RASHID,2.040,5.029
+A.K.I.,2.524,5.032
+ED,3.659,4.971
+GOUKI,12.571,4.953
+VEGA,4.270,5.026
+TERRY,3.222,5.036
+MAI,6.247,5.006`
+        },
+        'highMaster': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (HighMasterランク) - 2025年4月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,4.752,5.030
+JAMIE,4.724,4.953
+MANON,3.171,4.979
+KIMBERLY,2.632,5.052
+MARISA,3.237,5.011
+LILY,1.304,5.064
+JP,5.219,5.046
+JURI,6.127,5.000
+DEE JAY,3.947,5.019
+CAMMY,4.764,4.999
+RYU,6.982,4.962
+E.HONDA,2.071,5.127
+BLANKA,1.681,5.059
+GUILE,2.289,4.981
+KEN,7.177,4.993
+CHUN-LI,2.275,4.993
+ZANGIEF,4.016,4.986
+DHALSIM,1.343,5.059
+RASHID,2.739,5.050
+A.K.I.,3.426,5.020
+ED,3.279,5.018
+GOUKI,8.946,4.913
+VEGA,4.763,5.029
+TERRY,3.293,4.986
+MAI,5.846,4.996`
+        },
+        'grandMaster': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (GrandMasterランク) - 2025年4月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,4.798,5.061
+JAMIE,4.506,4.984
+MANON,3.298,5.004
+KIMBERLY,3.406,5.055
+MARISA,3.554,5.002
+LILY,1.662,5.018
+JP,5.496,5.000
+JURI,6.043,4.980
+DEE JAY,4.472,5.010
+CAMMY,4.567,4.972
+RYU,5.839,4.948
+E.HONDA,2.537,5.052
+BLANKA,1.989,5.083
+GUILE,2.182,4.960
+KEN,6.499,4.991
+CHUN-LI,2.200,5.001
+ZANGIEF,4.203,4.977
+DHALSIM,1.770,5.067
+RASHID,2.868,4.902
+A.K.I.,3.640,5.006
+ED,3.321,4.951
+GOUKI,7.854,4.988
+VEGA,4.765,5.043
+TERRY,3.083,5.008
+MAI,5.449,5.027`
+        },
+        'ultimateMaster': {
+            title: 'キャラクター使用率 × ダイアグラム勝率 (Ultimate Masterランク) - 2025年4月',
+            data: `Character,Usage Rate,Average Win Rate (Total)
+LUKE,4.488,5.015
+JAMIE,3.742,4.933
+MANON,3.057,4.932
+KIMBERLY,3.873,4.986
+MARISA,3.496,4.941
+LILY,1.930,4.966
+JP,5.936,5.028
+JURI,5.712,4.946
+DEE JAY,4.813,4.955
+CAMMY,4.665,5.029
+RYU,3.961,4.960
+E.HONDA,2.992,5.002
+BLANKA,3.281,5.036
+GUILE,2.211,4.934
+KEN,6.147,5.001
+CHUN-LI,2.405,5.057
+ZANGIEF,4.447,5.033
+DHALSIM,2.253,5.037
+RASHID,3.245,5.052
+A.K.I.,3.736,4.971
+ED,3.135,5.024
+GOUKI,6.773,4.952
+VEGA,5.411,5.040
+TERRY,2.321,5.009
+MAI,5.972,5.123`
         }
     },
 };

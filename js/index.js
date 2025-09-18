@@ -4,11 +4,15 @@ let scatterChart = null;
 const characterImageCache = {}; 
 
 // 各ランクごとのデフォルトスケールを定義
-const defaultScales = { x: { min: 0, max: 11 }, y: { min: 4.8, max: 5.20 } }; 
+const defaultScales = { x: { min: 0, max: 13 }, y: { min: 4.8, max: 5.20 } }; 
 
 const processData = (month, rank) => {
     if (monthlyData[month] === undefined) {
         alert('選択された月のデータが存在しません。');
+        return;
+    }
+    if (monthlyData[month][rank] === undefined) {
+        alert('選択されたランクのデータが存在しません。');
         return;
     }
     var csvData = monthlyData[month][rank].data;
@@ -17,7 +21,7 @@ const processData = (month, rank) => {
     return lines.map(line => {
         const parts = line.split(',');
         return {
-            label: parts[0],
+            characterName: parts[0],
             x: parseFloat(parts[1]),
             y: parseFloat(parts[2]),
             imageUrl: characterImageUrls[parts[0]] || ''
@@ -29,27 +33,28 @@ const updateChart = (rank) => {
     const selectedMonth = document.getElementById('month-selector').value;
     const processedData = processData(selectedMonth, rank);
 
-    // 画像オブジェクトを作成
+    // 画像オブジェクトを生成し、キャッシュに保存
     const characterImages = processedData.map(dataPoint => {
-        const charName = dataPoint.label;
+        const charName = dataPoint.characterName;
         if (!characterImageCache[charName]) {
-            // アスペクト比を計算
-            const aspectRatio = 23 / 50;
-            let imageWidth;
-            if (window.innerWidth >= 700) {
-                imageWidth = 45;
-            } else if (window.innerWidth >= 600) { // 600以上700未満
-                imageWidth = 30;
-            } else { // 600未満
-                imageWidth = 22;
-            }
-            const imageHeight = imageWidth * aspectRatio;
             const img = new Image();
             img.src = dataPoint.imageUrl;
-            img.width = imageWidth;
-            img.height = imageHeight;
             characterImageCache[charName] = img;
         }
+        // アスペクト比を計算
+        const aspectRatio = 23 / 50;
+        let imageWidth;
+        if (window.innerWidth >= 700) {
+            imageWidth = 45;
+        } else if (window.innerWidth >= 600) { // 600以上700未満
+            imageWidth = 30;
+        } else { // 600未満
+            imageWidth = 22;
+        }
+        const chachedImg = characterImageCache[charName];
+        chachedImg.width = imageWidth;
+        chachedImg.height = imageWidth * aspectRatio;
+        characterImageCache[charName] = chachedImg;
         return characterImageCache[charName];
     });
 
@@ -61,7 +66,7 @@ const updateChart = (rank) => {
         // 動的スケール: データから最小値/最大値を計算
         const xValues = processedData.map(d => d.x);
         const yValues = processedData.map(d => d.y);
-        const minX = Math.min(...xValues);
+        const minX = defaultScales.x.min;
         const maxX = Math.max(...xValues);
         const minY = Math.min(...yValues);
         const maxY = Math.max(...yValues);
@@ -76,14 +81,9 @@ const updateChart = (rank) => {
         yScaleOptions = { title: { display: true, text: '対戦ダイアグラム（トータル勝率）' }, min: defaultScales.y.min, max: defaultScales.y.max, ticks: { stepSize: 0.05 } };
     }
 
-    const pointRadius = 12
-    const hoverRadius = 15
-
     if (scatterChart) {
         scatterChart.data.datasets[0].data = processedData;
         scatterChart.data.datasets[0].pointStyle = characterImages;
-        scatterChart.data.datasets[0].pointRadius = pointRadius;
-        scatterChart.data.datasets[0].pointHoverRadius = hoverRadius;
         scatterChart.options.scales.x = xScaleOptions;
         scatterChart.options.scales.y = yScaleOptions;
         scatterChart.update();
@@ -94,12 +94,7 @@ const updateChart = (rank) => {
             data: {
                 datasets: [{
                     data: processedData,
-                    pointStyle: characterImages,
-                    pointRadius: pointRadius,
-                    pointHoverRadius: hoverRadius,
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
+                    pointStyle: characterImages
                 }]
             },
             options: {
@@ -130,10 +125,11 @@ const updateChart = (rank) => {
                         }
                     },
                     tooltip: {
+                        displayColors: false,
                         callbacks: {
                             label: function(context) {
                                 const dataPoint = context.raw;
-                                return `${dataPoint.label || ''}: (使用率: ${dataPoint.x.toFixed(3)}%, 勝率: ${dataPoint.y.toFixed(3)}%)`;
+                                return `${dataPoint.characterName || ''}（使用率: ${dataPoint.x.toFixed(3)}%, 勝率: ${dataPoint.y.toFixed(3)}）`;
                             }
                         }
                     },
