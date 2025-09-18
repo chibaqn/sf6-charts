@@ -26,7 +26,12 @@ function processData(csvData) {
 }
 
 function updateChart(rank) {
-    const data = datasets[rank];
+    const selectedMonth = document.getElementById('month-selector').value;
+    if (monthlyData[selectedMonth] === undefined) {
+        alert('選択された月のデータが存在しません。');
+        return;
+    }
+    const data = monthlyData[selectedMonth][rank];
     const processedData = processData(data.data);
 
     const isMobile = window.innerWidth < 600;
@@ -134,7 +139,28 @@ function updateChart(rank) {
     }
 }
 
+function initializeMonthSelector() {
+    const monthSelector = document.getElementById('month-selector');
+    const months = Object.keys(monthlyData).sort().reverse(); // 新しい順
+
+    months.forEach(month => {
+        const option = document.createElement('option');
+        option.value = month;
+        const [year, monthNum] = month.split('-');
+        option.textContent = `${year}年${parseInt(monthNum, 10)}月`;
+        monthSelector.appendChild(option);
+    });
+
+    monthSelector.addEventListener('change', () => {
+        const activeRank = document.querySelector('.tabs img.active').id.replace('Btn', '');
+        // グラフを破棄せずにデータを更新する
+        updateChart(activeRank);
+    });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
+    initializeMonthSelector(); // 月セレクターを初期化
+
     const ctx = document.getElementById('scatterChart').getContext('2d');
 
     document.querySelectorAll('.tabs img').forEach(image => {

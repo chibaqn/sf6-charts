@@ -13,37 +13,94 @@
 }
 
 body {
-    font-family: sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
     margin: 0;
-    background-color: var(--light-gray);
-    padding: 10px;
+    padding: 0;
 }
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+main {
+    /* This is now the main container for controls and chart */
+}
+
 .chart-container {
-    position: relative;
-    width: 90%;
-    max-width: 1000px;
-    margin: auto;
+    position: relative; /* For positioning elements inside if needed later */
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 20px;
     padding: 20px;
-    background-color: var(--white);
-    border-radius: var(--border-radius);
+    background-color: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-sizing: border-box;
 }
+
+.controls-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.month-selector-container {
+    display: flex;
+    align-items: center;
+}
+
+.month-selector-container label {
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#month-selector {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
 .zoom-controls {
-    text-align: right;
-    margin-bottom: 10px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
-.zoom-controls button {
+
+.zoom-controls button, .scale-btn {
     font-size: 1.2em;
+    padding: 3px 8px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.zoom-controls button:hover, .scale-btn:hover {
+    background-color: #e9e9e9;
 }
 
 .scale-toggle-container {
-    display: inline-flex;
-    border: 1px solid var(--medium-gray);
-    border-radius: 5px;
+    display: flex;
+    border: none;
+    border-radius: 4px;
     overflow: hidden;
     margin-left: 10px;
     vertical-align: middle;
@@ -52,7 +109,7 @@ body {
 .scale-btn {
     background-color: #f0f0f0;
     border: none;
-    padding: 8px 12px;
+    padding: 4px 8px; /* Slightly different padding for text */
     cursor: pointer;
     transition: background-color 0.3s;
     font-size: 14px;
@@ -80,9 +137,10 @@ body {
 .tabs {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 10px;
+    gap: 10px;
+    margin-bottom: 15px;
+    /* border-bottom: 2px solid #eee; */
+    /* padding-bottom: 15px; */
     cursor: pointer;
 }
 .tabs img {
@@ -103,14 +161,32 @@ body {
     word-break: break-all;
 }
 .info-links a {
-    color: var(--primary-color);
-    text-decoration: underline;
-    margin: 0 6px;
-    transition: color 0.2s;
+    color: #337ab7;
+    text-decoration: none;
 }
+
 .info-links a:hover {
-    color: var(--primary-color-hover);
+    text-decoration: underline;
 }
+
+footer {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .controls-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    header h1 {
+        font-size: 1.2em;
+    }
+}
+
 @media (max-width: 600px) {
     body {
         align-items: flex-start;
