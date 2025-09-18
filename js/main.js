@@ -1,16 +1,17 @@
 let scatterChart = null;
 
+// 画像キャッシュ用のグローバルオブジェクト
+const characterImageCache = {}; 
+
 // 各ランクごとのデフォルトスケールを定義
-const defaultScales = { x: { min: 0, max: 11 }, y: { min: 4.8, max: 5.20 } };
+const defaultScales = { x: { min: 0, max: 11 }, y: { min: 4.8, max: 5.20 } }; 
 
-function getCharacterImageUrl(characterName) {
-    const cleanedName = characterName.toLowerCase().replace(/[^a-z0-9]/g, '');
-    if (cleanedName === 'ehonda') return 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_honda.jpg';
-    if (cleanedName === 'aki') return 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_aki.jpg';
-    return `https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_${cleanedName}.jpg`;
-}
-
-function processData(csvData) {
+const processData = (month, rank) => {
+    if (monthlyData[month] === undefined) {
+        alert('選択された月のデータが存在しません。');
+        return;
+    }
+    var csvData = monthlyData[month][rank].data;
     const lines = csvData.trim().split('\n');
     lines.shift();
     return lines.map(line => {
@@ -19,42 +20,37 @@ function processData(csvData) {
             label: parts[0],
             x: parseFloat(parts[1]),
             y: parseFloat(parts[2]),
-            imageUrl: getCharacterImageUrl(parts[0])
+            imageUrl: characterImageUrls[parts[0]] || ''
         };
     });
 }
 
-function updateChart(rank) {
+const updateChart = (rank) => {
     const selectedMonth = document.getElementById('month-selector').value;
-    if (monthlyData[selectedMonth] === undefined) {
-        alert('選択された月のデータが存在しません。');
-        return;
-    }
-    const data = monthlyData[selectedMonth][rank];
-    const processedData = processData(data.data);
-
-    // アスペクト比を計算
-    const aspectRatio = 23 / 50;
-    let imageWidth;
-    if (window.innerWidth >= 700) {
-        imageWidth = 45;
-    } else if (window.innerWidth >= 600) { // 600以上700未満
-        imageWidth = 30;
-    } else { // 600未満
-        imageWidth = 22;
-    }
-    // 縦幅を計算
-    const imageHeight = imageWidth * aspectRatio;
-    const pointRadius = 12
-    const hoverRadius = 15
+    const processedData = processData(selectedMonth, rank);
 
     // 画像オブジェクトを作成
     const characterImages = processedData.map(dataPoint => {
-        const img = new Image();
-        img.src = dataPoint.imageUrl;
-        img.width = imageWidth;
-        img.height = imageHeight;
-        return img;
+        const charName = dataPoint.label;
+        if (!characterImageCache[charName]) {
+            // アスペクト比を計算
+            const aspectRatio = 23 / 50;
+            let imageWidth;
+            if (window.innerWidth >= 700) {
+                imageWidth = 45;
+            } else if (window.innerWidth >= 600) { // 600以上700未満
+                imageWidth = 30;
+            } else { // 600未満
+                imageWidth = 22;
+            }
+            const imageHeight = imageWidth * aspectRatio;
+            const img = new Image();
+            img.src = dataPoint.imageUrl;
+            img.width = imageWidth;
+            img.height = imageHeight;
+            characterImageCache[charName] = img;
+        }
+        return characterImageCache[charName];
     });
 
     // スケールオプションを決定
@@ -79,6 +75,9 @@ function updateChart(rank) {
         xScaleOptions = { type: 'linear', position: 'bottom', title: { display: true, text: 'キャラクター使用率 (%)' }, min: defaultScales.x.min, max: defaultScales.x.max, ticks: { stepSize: 0.5 } };
         yScaleOptions = { title: { display: true, text: '対戦ダイアグラム（トータル勝率）' }, min: defaultScales.y.min, max: defaultScales.y.max, ticks: { stepSize: 0.05 } };
     }
+
+    const pointRadius = 12
+    const hoverRadius = 15
 
     if (scatterChart) {
         scatterChart.data.datasets[0].data = processedData;
@@ -147,7 +146,7 @@ function updateChart(rank) {
     }
 }
 
-function initializeMonthSelector() {
+const initializeMonthSelector = () => {
     const monthSelector = document.getElementById('month-selector');
     const months = Object.keys(monthlyData).sort().reverse(); // 新しい順
 

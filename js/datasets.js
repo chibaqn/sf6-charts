@@ -1,3 +1,34 @@
+// キャラクターの画像URL
+const characterImageUrls = {
+    'LUKE': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_luke.jpg',
+    'JAMIE': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_jamie.jpg',
+    'MANON': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_manon.jpg',
+    'KIMBERLY': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_kimberly.jpg',
+    'MARISA': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_marisa.jpg',
+    'LILY': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_lily.jpg',
+    'JP': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_jp.jpg',
+    'JURI': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_juri.jpg',
+    'DEE JAY': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_deejay.jpg',
+    'CAMMY': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_cammy.jpg',
+    'RYU': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_ryu.jpg',
+    'E.HONDA': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_honda.jpg',
+    'BLANKA': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_blanka.jpg',
+    'GUILE': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_guile.jpg',
+    'KEN': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_ken.jpg',
+    'CHUN-LI': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_chunli.jpg',
+    'ZANGIEF': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_zangief.jpg',
+    'DHALSIM': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_dhalsim.jpg',
+    'RASHID': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_rashid.jpg',
+    'A.K.I.': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_aki.jpg',
+    'ED': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_ed.jpg',
+    'GOUKI': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_gouki.jpg',
+    'VEGA': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_vega.jpg',
+    'TERRY': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_terry.jpg',
+    'MAI': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_mai.jpg',
+    'ELENA': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_elena.jpg',
+    'SAGAT': 'https://www.streetfighter.com/6/buckler/assets/images/material/character/dia/thumb/card_sagat.jpg'
+};
+
 // 月ごとのキャラクター使用率 × 平均勝率のデータセット
 const monthlyData = {
     '2025-08': {
