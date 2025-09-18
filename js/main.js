@@ -34,12 +34,21 @@ function updateChart(rank) {
     const data = monthlyData[selectedMonth][rank];
     const processedData = processData(data.data);
 
-    const isMobile = window.innerWidth < 600;
+    // アスペクト比を計算
+    const aspectRatio = 23 / 50;
+    let imageWidth;
+    if (window.innerWidth >= 700) {
+        imageWidth = 45;
+    } else if (window.innerWidth >= 600) { // 600以上700未満
+        imageWidth = 30;
+    } else { // 600未満
+        imageWidth = 22;
+    }
+    // 縦幅を計算
+    const imageHeight = imageWidth * aspectRatio;
     // 拡大率を反映
-    const imageWidth = (isMobile ? 22 : 45) * zoomLevel;
-    const imageHeight = (isMobile ? 11 : 21) * zoomLevel;
-    const pointRadius = (isMobile ? 12 : 15) * zoomLevel;
-    const hoverRadius = (isMobile ? 15 : 18) * zoomLevel;
+    const pointRadius = 12 * zoomLevel;
+    const hoverRadius = 15 * zoomLevel;
 
     const characterImages = processedData.map(dataPoint => {
         const img = new Image();
@@ -160,9 +169,8 @@ function initializeMonthSelector() {
 
 window.addEventListener('DOMContentLoaded', () => {
     initializeMonthSelector(); // 月セレクターを初期化
-
-    const ctx = document.getElementById('scatterChart').getContext('2d');
-
+     
+    // タブのイベントリスナー
     document.querySelectorAll('.tabs img').forEach(image => {
         image.addEventListener('click', (e) => {
             document.querySelectorAll('.tabs img').forEach(img => img.classList.remove('active'));

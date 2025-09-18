@@ -1,3 +1,3 @@
-# SF6 Chart
+# スト6 Charts
 
-https://chibaqn.github.io/sf6_charts
+- https://chibaqn.github.io/sf6-charts
