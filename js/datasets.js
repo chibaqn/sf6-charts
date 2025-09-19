@@ -636,3 +636,5 @@ MAI,5.972,5.123`
         }
     },
 };
+
+export { characterImageUrls, monthlyData };

@@ -1,3 +1,5 @@
+import { characterImageUrls, monthlyData } from './datasets.js';
+
 let scatterChart = null;
 
 // 画像キャッシュ用のグローバルオブジェクト
